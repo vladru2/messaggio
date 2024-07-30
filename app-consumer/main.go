@@ -57,13 +57,6 @@ func main() {
 		cfg.BackendMaxOpenConn,
 		cfg.BackendMaxIdleConn,
 	)
-	err := backendDB.AutoMigrate(
-		&Message{},
-		&Stat{},
-	)
-	if err != nil {
-		panic(err)
-	}
 
 	consumer, err := sarama.NewConsumer([]string{cfg.Kafka}, nil)
 	if err != nil {

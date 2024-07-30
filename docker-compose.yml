@@ -42,6 +42,21 @@ services:
       interval: 1s
       timeout: 10s
       retries: 10
+  app-consumer:
+    build:
+      context: ./app-consumer
+      dockerfile: Dockerfile
+    environment:
+      - KAFKA=kafka:9092
+      - BACKEND_DB_DSN=host=postgres user=postgres password=rrpkRM5c5ujN dbname=postgres port=5432 sslmode=disable TimeZone=Asia/Shanghai
+      - BACKEND_DB_MAX_OPEN_CONN=5
+      - BACKEND_DB_MAX_IDLE_CONN=5
+      - BACKEND_DB_CONN_IDLE_SECONDS=5
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy 
   app-main:
     build:
       context: ./app-main
@@ -64,18 +79,5 @@ services:
         condition: service_healthy
       kafka:
         condition: service_healthy
-  app-consumer:
-    build:
-      context: ./app-consumer
-      dockerfile: Dockerfile
-    environment:
-      - KAFKA=kafka:9092
-      - BACKEND_DB_DSN=host=postgres user=postgres password=rrpkRM5c5ujN dbname=postgres port=5432 sslmode=disable TimeZone=Asia/Shanghai
-      - BACKEND_DB_MAX_OPEN_CONN=5
-      - BACKEND_DB_MAX_IDLE_CONN=5
-      - BACKEND_DB_CONN_IDLE_SECONDS=5
-    depends_on:
-      postgres:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy 
+      app-consumer:
+        condition: service_started
