@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -112,7 +113,7 @@ type responce struct {
 
 // Статистика
 func (s *Service) getStats(c echo.Context) error {
-	var total int
+	var total sql.NullInt64
 	var perUser []Stat
 
 	res := s.db.Find(&perUser)
@@ -127,8 +128,12 @@ func (s *Service) getStats(c echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
+	if !total.Valid {
+		total.Int64 = 0
+	}
+
 	return c.JSON(http.StatusOK, &responce{
-		TotalProcessed:   total,
+		TotalProcessed:   int(total.Int64),
 		ProcessedPerUser: perUser,
 	})
 }
