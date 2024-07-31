@@ -27,8 +27,21 @@ app-main получает из базы данных статистику, ра�
 **Response**:
 ```
 {
-    "total_processed": 10,
-    "processed_per_users": []
+    "total_processed": 7,
+    "processed_per_users": [
+        {
+            "user_name": "user1",
+            "processed_count": 3
+        },
+        {
+            "user_name": "user2",
+            "processed_count": 3
+        },
+        {
+            "user_name": "user3",
+            "processed_count": 1
+        }
+    ]
 }
 ```
 
